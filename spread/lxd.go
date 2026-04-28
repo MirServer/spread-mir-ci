@@ -27,6 +27,7 @@ const (
 	Fedora
 	Alpine
 	ArchLinux
+	openSUSE
 )
 
 func LXD(p *Project, b *Backend, o *Options) Provider {
@@ -105,6 +106,9 @@ func (s *lxdServer) Distro() Distro {
 	}
 	if parts[0] == "archlinux" || image == "archlinux" {
 		return ArchLinux
+	}
+	if parts[0] == "opensuse" || image == "opensuse" {
+		return openSUSE
 	}
 	return Unknown
 }
@@ -306,6 +310,9 @@ func sshInstallCommand(distro Distro) []string {
 	}
 	if distro == ArchLinux {
 		return []string{"pacman", "--noconfirm", "--sync", "openssh"}
+	}
+	if distro == openSUSE {
+		return []string{"zypper", "--non-interactive", "install", "openssh"}
 	}
 	// Precondition failure - unknown distro!
 	return []string{}
@@ -610,6 +617,9 @@ func sshReloadCommand(distro Distro) []string {
 		return []string{"service", "sshd", "restart"}
 	}
 	if distro == ArchLinux {
+		return []string{"systemctl", "restart", "sshd"}
+	}
+	if distro == openSUSE {
 		return []string{"systemctl", "restart", "sshd"}
 	}
 	// Precondition failure: unknown distro!

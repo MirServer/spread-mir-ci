@@ -5,6 +5,7 @@ backends:
         systems:
             - ubuntu-16.04
             - fedora-26
+            - opensuse-tumbleweed
 
 path: /home/test
 
